@@ -1,32 +1,27 @@
 package com.moneytap.com.home;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.EditText;
 
+import com.hannesdorfmann.mosby3.mvp.lce.MvpLceActivity;
 import com.moneytap.com.R;
+import com.moneytap.com.home.adapter.Search;
 import com.moneytap.com.home.adapter.SearchAdapter;
+import com.moneytap.com.home.adapter.SearchPresenter;
 import com.moneytap.com.model.SearchModel;
-import com.moneytap.com.network.ApiUtils;
 
-import java.util.HashMap;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MvpLceActivity<ConstraintLayout, SearchModel, Search.View,
+        Search.Presenter> implements Search.View {
 
     private EditText mSearch;
     private static final String TAG = MainActivity.class.getName();
-    private CompositeDisposable compositeDisposable;
     private SearchAdapter searchAdapter;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
@@ -35,15 +30,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        compositeDisposable = new CompositeDisposable();
         mSearch = findViewById(R.id.search_text);
-        mRecyclerView = findViewById(R.id.recylerView);
+        mRecyclerView = findViewById(R.id.contentView);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         searchAdapter = new SearchAdapter(this);
         mRecyclerView.setAdapter(searchAdapter);
         loadData();
+    }
+
+    @NonNull
+    @Override
+    public Search.Presenter createPresenter() {
+        return new SearchPresenter(this);
     }
 
     private void loadData() {
@@ -54,35 +54,27 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("action", "query");
-                hashMap.put("format", "json");
-                hashMap.put("prop", "pageimages|pageterms");
-                hashMap.put("titles", charSequence.toString());
-                hashMap.put("redirects", "1");
-                hashMap.put("formatversion", "2");
-                hashMap.put("piprop", "thumbnail");
-                hashMap.put("pilimit", "3");
-                hashMap.put("wbptterms", "description");
-                compositeDisposable.add(ApiUtils.getAPIService().getFollowSearchData(hashMap)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(new Consumer<SearchModel>() {
-                            @Override
-                            public void accept(SearchModel searchModel) throws Exception {
-                                Log.e(TAG, "searchModelResponse==" + searchModel.getQuery().getPages());
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                Log.e(TAG, "nhinHua==" + throwable.getMessage());
-                            }
-                        }));
+                presenter.searchItem(charSequence.toString());
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
             }
         });
+    }
+
+    @Override
+    protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
+        return e.getMessage() + "";
+    }
+
+    @Override
+    public void setData(SearchModel data) {
+
+    }
+
+    @Override
+    public void loadData(boolean pullToRefresh) {
+
     }
 }
