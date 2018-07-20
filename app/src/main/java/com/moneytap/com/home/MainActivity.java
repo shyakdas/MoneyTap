@@ -70,7 +70,7 @@ public class MainActivity extends MvpLceActivity<ConstraintLayout, SearchModel, 
 
     @Override
     public void setData(SearchModel data) {
-
+        searchAdapter.addAll(data.getPages());
     }
 
     @Override

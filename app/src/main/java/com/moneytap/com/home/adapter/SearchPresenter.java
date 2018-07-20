@@ -1,9 +1,11 @@
 package com.moneytap.com.home.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
+import com.moneytap.com.model.BaseResponseDTO;
 import com.moneytap.com.model.SearchModel;
 import com.moneytap.com.network.ApiUtils;
 
@@ -13,6 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 public class SearchPresenter extends MvpBasePresenter<Search.View> implements Search.Presenter {
 
@@ -40,15 +43,23 @@ public class SearchPresenter extends MvpBasePresenter<Search.View> implements Se
         compositeDisposable.add(ApiUtils.getAPIService().getFollowSearchData(hashMap)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<SearchModel>() {
+                .subscribe(new Consumer<Response<BaseResponseDTO<SearchModel>>>() {
                     @Override
-                    public void accept(SearchModel searchModel) throws Exception {
-                        Log.e(TAG, "searchModelResponse==" + searchModel.getQuery().getPages());
+                    public void accept(final Response<BaseResponseDTO<SearchModel>> searchResponse) throws Exception {
+                        Log.e(TAG, "searchResponse==" + searchResponse.body().getQuery().getPages().get(0).getTitle());
+                        if (searchResponse.body().getQuery().getPages() != null) {
+                            ifViewAttached(true, new ViewAction<Search.View>() {
+                                @Override
+                                public void run(@NonNull Search.View view) {
+                                    view.setData(searchResponse.body().getQuery());
+                                }
+                            });
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Log.e(TAG, "nhinHua==" + throwable.getMessage());
+                        Log.e(TAG, "throwable==" + throwable.getMessage());
                     }
                 }));
     }
