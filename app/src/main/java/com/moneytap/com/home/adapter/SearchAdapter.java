@@ -8,11 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.bumptech.glide.Glide;
 import com.moneytap.com.R;
 import com.moneytap.com.model.SearchModel;
-import com.moneytap.com.utils.AppUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +34,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     public void addAll(List<SearchModel.Page> moveResults) {
         for (SearchModel.Page result : moveResults) {
             add(result);
+        }
+    }
+
+    public void removeAll() {
+        if (mArrayList != null) {
+            mArrayList.clear();
+            notifyDataSetChanged();
         }
     }
 
@@ -70,22 +74,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         }
 
         public void bind(int position) {
-            TextDrawable drawable = TextDrawable.builder()
-                    .beginConfig()
-                    .width(80)
-                    .height(80)
-                    .endConfig()
-                    .buildRect(String.valueOf(mArrayList.get(position).getTitle().charAt(0)),
-                            AppUtils.getRandomColor());
-            if (mArrayList.get(position).getThumbnail().getSource() != null) {
-                Glide.with(mContext).load(mArrayList.get(position).getThumbnail().getSource())
-                        .error(drawable).into(mProfileImage);
-            }
             if (mArrayList.get(position).getTitle() != null) {
                 mTitle.setText(mArrayList.get(position).getTitle());
             }
-            if (mArrayList.get(position).getTerms().getDescription() != null) {
-                mDescription.setText(mArrayList.get(position).getTerms().getDescription().get(position));
+            if (!(mArrayList.get(position).getTerms() == null) &&
+                    !(mArrayList.get(position).getTerms().getDescription() == null) &&
+                    !mArrayList.get(position).getTerms().getDescription().isEmpty()) {
+                mDescription.setText(mArrayList.get(position).getTerms().getDescription().get(0));
             }
         }
     }

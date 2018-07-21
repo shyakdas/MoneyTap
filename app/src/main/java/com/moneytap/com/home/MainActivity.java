@@ -66,6 +66,7 @@ public class MainActivity extends MvpLceActivity<ConstraintLayout, SearchModel, 
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                searchAdapter.removeAll();
                 presenter.searchItem(charSequence.toString());
             }
 
