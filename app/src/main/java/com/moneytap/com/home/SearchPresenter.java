@@ -83,11 +83,8 @@ public class SearchPresenter extends MvpBasePresenter<Search.View> implements Se
                     @Override
                     public void accept(Response<BaseLinkDTO> baseLinkDTOResponse) throws Exception {
                         Log.e(TAG, "baseLinkDTOResponse==" + baseLinkDTOResponse.body().getQuery().getPages());
-
                         Map pages = baseLinkDTOResponse.body().getQuery().getPages();
-
                         Set<Integer> a = pages.keySet();
-
                         PageLink obj = new PageLink();
                         for (int i : a) {
                             obj = (PageLink) pages.get(i);
@@ -100,7 +97,6 @@ public class SearchPresenter extends MvpBasePresenter<Search.View> implements Se
                             }
                         });
                         Log.e(TAG, "baseLinkDTOResponseLink" + obj.getCanonicalurl());
-
                     }
                 }, new Consumer<Throwable>() {
                     @Override

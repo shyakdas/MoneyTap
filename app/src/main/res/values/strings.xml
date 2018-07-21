@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MoneyTap</string>
     <string name="facebook_app_id">691364821215638</string>
+    <string name="search_ex_ronaldo">Search (ex-Ronaldo)</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
 </resources>
