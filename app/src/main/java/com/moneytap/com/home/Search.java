@@ -1,4 +1,4 @@
-package com.moneytap.com.home.adapter;
+package com.moneytap.com.home;
 
 import com.hannesdorfmann.mosby3.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby3.mvp.lce.MvpLceView;
@@ -12,6 +12,8 @@ public interface Search {
 
     interface Presenter extends MvpPresenter<Search.View> {
 
-        public void searchItem(String search);
+        void searchItem(String search);
+
+        void findPageLink(int pageId);
     }
 }

@@ -1,4 +1,4 @@
-package com.moneytap.com.home.adapter;
+package com.moneytap.com.home;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.moneytap.com.R;
+import com.moneytap.com.listener.SearchListener;
 import com.moneytap.com.model.SearchModel;
 
 import java.util.ArrayList;
@@ -20,10 +21,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     private Context mContext;
     private ArrayList<SearchModel.Page> mArrayList;
+    private SearchListener searchListener;
 
-    public SearchAdapter(Context mContext) {
+    public SearchAdapter(Context mContext, SearchListener searchListener) {
         this.mContext = mContext;
         this.mArrayList = new ArrayList<>();
+        this.searchListener = searchListener;
     }
 
     public void add(SearchModel.Page r) {
@@ -61,7 +64,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         return mArrayList.size() > 0 ? mArrayList.size() : 0;
     }
 
-    public class SearchViewHolder extends RecyclerView.ViewHolder {
+    public class SearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private CircleImageView mProfileImage;
         private TextView mTitle, mDescription;
@@ -71,6 +74,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             mProfileImage = itemView.findViewById(R.id.circleImageView);
             mTitle = itemView.findViewById(R.id.item_name);
             mDescription = itemView.findViewById(R.id.item_description);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(int position) {
@@ -82,6 +86,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                     !mArrayList.get(position).getTerms().getDescription().isEmpty()) {
                 mDescription.setText(mArrayList.get(position).getTerms().getDescription().get(0));
             }
+        }
+
+        @Override
+        public void onClick(View view) {
+            searchListener.postClick(getAdapterPosition(), mArrayList.get(getAdapterPosition()).getPageid());
         }
     }
 }

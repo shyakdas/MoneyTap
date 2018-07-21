@@ -8,17 +8,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.hannesdorfmann.mosby3.mvp.lce.MvpLceActivity;
 import com.moneytap.com.R;
-import com.moneytap.com.home.adapter.Search;
-import com.moneytap.com.home.adapter.SearchAdapter;
-import com.moneytap.com.home.adapter.SearchPresenter;
+import com.moneytap.com.listener.SearchListener;
 import com.moneytap.com.model.SearchModel;
 
 public class MainActivity extends MvpLceActivity<ConstraintLayout, SearchModel, Search.View,
-        Search.Presenter> implements Search.View {
+        Search.Presenter> implements Search.View, SearchListener {
 
     private EditText mSearch;
     private static final String TAG = MainActivity.class.getName();
@@ -35,7 +34,7 @@ public class MainActivity extends MvpLceActivity<ConstraintLayout, SearchModel, 
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        searchAdapter = new SearchAdapter(this);
+        searchAdapter = new SearchAdapter(this, this);
         mRecyclerView.setAdapter(searchAdapter);
         loadData(false);
     }
@@ -75,5 +74,11 @@ public class MainActivity extends MvpLceActivity<ConstraintLayout, SearchModel, 
 
             }
         });
+    }
+
+    @Override
+    public void postClick(int position, int pageId) {
+        Log.e(TAG, "postCLickPageId==" + pageId);
+        presenter.findPageLink(pageId);
     }
 }

@@ -1,4 +1,4 @@
-package com.moneytap.com.home.adapter;
+package com.moneytap.com.home;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 import com.moneytap.com.model.BaseResponseDTO;
+import com.moneytap.com.model.SearchLink;
 import com.moneytap.com.model.SearchModel;
 import com.moneytap.com.network.ApiUtils;
 
@@ -40,7 +41,7 @@ public class SearchPresenter extends MvpBasePresenter<Search.View> implements Se
         hashMap.put("piprop", "thumbnail");
         hashMap.put("pilimit", "3");
         hashMap.put("wbptterms", "description");
-        compositeDisposable.add(ApiUtils.getAPIService().getFollowSearchData(hashMap)
+        compositeDisposable.add(ApiUtils.getAPIService().getSearchData(hashMap)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Response<BaseResponseDTO<SearchModel>>>() {
@@ -60,6 +61,30 @@ public class SearchPresenter extends MvpBasePresenter<Search.View> implements Se
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Log.e(TAG, "throwable==" + throwable.getMessage());
+                    }
+                }));
+    }
+
+    @Override
+    public void findPageLink(int pageId) {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("action", "query");
+        hashMap.put("prop", "info");
+        hashMap.put("pageids", String.valueOf(pageId));
+        hashMap.put("inprop", "url");
+        hashMap.put("format", "json");
+        compositeDisposable.add(ApiUtils.getAPIService().getDataLink(hashMap)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<Response<BaseResponseDTO<SearchLink>>>() {
+                    @Override
+                    public void accept(Response<BaseResponseDTO<SearchLink>> dataLinkResponse) throws Exception {
+                        Log.e(TAG, "dataLinkResponse==" + dataLinkResponse.body().getQuery().getPages().get736().getCanonicalurl());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwableDataLink) throws Exception {
+                        Log.e(TAG, "throwableDataLink==" + throwableDataLink.getMessage());
                     }
                 }));
     }
