@@ -37,30 +37,13 @@ public class MainActivity extends MvpLceActivity<ConstraintLayout, SearchModel, 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         searchAdapter = new SearchAdapter(this);
         mRecyclerView.setAdapter(searchAdapter);
-        loadData();
+        loadData(false);
     }
 
     @NonNull
     @Override
     public Search.Presenter createPresenter() {
         return new SearchPresenter(this);
-    }
-
-    private void loadData() {
-        mSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                presenter.searchItem(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
     }
 
     @Override
@@ -75,6 +58,21 @@ public class MainActivity extends MvpLceActivity<ConstraintLayout, SearchModel, 
 
     @Override
     public void loadData(boolean pullToRefresh) {
+        mSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.searchItem(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 }
