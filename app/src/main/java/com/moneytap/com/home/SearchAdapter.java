@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.moneytap.com.R;
 import com.moneytap.com.listener.SearchListener;
 import com.moneytap.com.model.SearchModel;
@@ -78,8 +79,21 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         }
 
         public void bind(int position) {
-            if (mArrayList.get(position).getTitle() != null) {
+            if (!(mArrayList.get(position).getTerms() == null) &&
+                    !(mArrayList.get(position).getTitle() == null) &&
+                    !mArrayList.get(position).getTitle().isEmpty()) {
                 mTitle.setText(mArrayList.get(position).getTitle());
+            }
+            if (!(mArrayList.get(position).getThumbnail() == null) &&
+                    !(mArrayList.get(position).getThumbnail().getSource() == null) &&
+                    !mArrayList.get(position).getThumbnail().getSource().isEmpty()) {
+                try {
+                    Glide.with(mContext).load(mArrayList.get(position).getThumbnail()
+                            .getSource()).centerCrop().into(mProfileImage);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+
             }
             if (!(mArrayList.get(position).getTerms() == null) &&
                     !(mArrayList.get(position).getTerms().getDescription() == null) &&
