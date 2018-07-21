@@ -15,6 +15,7 @@ import com.hannesdorfmann.mosby3.mvp.lce.MvpLceActivity;
 import com.moneytap.com.R;
 import com.moneytap.com.listener.SearchListener;
 import com.moneytap.com.model.SearchModel;
+import com.moneytap.com.utils.AppUtils;
 
 public class MainActivity extends MvpLceActivity<ConstraintLayout, SearchModel, Search.View,
         Search.Presenter> implements Search.View, SearchListener {
@@ -80,5 +81,11 @@ public class MainActivity extends MvpLceActivity<ConstraintLayout, SearchModel, 
     public void postClick(int position, int pageId) {
         Log.e(TAG, "postCLickPageId==" + pageId);
         presenter.findPageLink(pageId);
+    }
+
+    @Override
+    public void openWikipediaLink(String link) {
+        Log.e(TAG, "itemLink==" + link);
+        AppUtils.creatorCustomTabs(this, link);
     }
 }

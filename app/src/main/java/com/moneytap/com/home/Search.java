@@ -8,6 +8,7 @@ public interface Search {
 
     interface View extends MvpLceView<SearchModel> {
 
+        void openWikipediaLink(String link);
     }
 
     interface Presenter extends MvpPresenter<Search.View> {
@@ -15,5 +16,6 @@ public interface Search {
         void searchItem(String search);
 
         void findPageLink(int pageId);
+
     }
 }

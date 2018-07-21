@@ -42,4 +42,5 @@ dependencies {
     implementation 'com.hannesdorfmann.mosby3:viewstate:3.1.0'
     implementation 'com.hannesdorfmann.mosby3:mvp-lce:3.1.0'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    implementation 'saschpe.android:customtabs:1.1.1'
 }

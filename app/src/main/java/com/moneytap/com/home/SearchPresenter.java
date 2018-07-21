@@ -92,13 +92,20 @@ public class SearchPresenter extends MvpBasePresenter<Search.View> implements Se
                         for (int i : a) {
                             obj = (PageLink) pages.get(i);
                         }
-                        Log.e("TAG", obj.getCanonicalurl());
+                        final PageLink finalObj = obj;
+                        ifViewAttached(true, new ViewAction<Search.View>() {
+                            @Override
+                            public void run(@NonNull Search.View view) {
+                                view.openWikipediaLink(finalObj.getCanonicalurl());
+                            }
+                        });
+                        Log.e(TAG, "baseLinkDTOResponseLink" + obj.getCanonicalurl());
 
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        Log.e(TAG, "throwableLink==" + throwable.getMessage());
                     }
                 }));
     }
